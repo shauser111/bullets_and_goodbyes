@@ -1,56 +1,412 @@
-{
-  "questions": [
-    {
-      "question": "According to the analysis, what is the primary function of choosing an F-Major key for \"Bullets and Goodbyes,\" a song with a dark, outlaw narrative?",
-      "hint": "Consider the relationship between the music's feeling and the story's events. This is what the analysis calls the song's 'X-Factor'.",
-      "answerOptions": [
-        {
-          "text": "To make the song sound more commercially appealing to a pop audience.",
-          "rationale": "While a major key can be commercial, the analysis identifies a more specific, artistic reason for this unconventional choice related to the character.",
-          "isCorrect": false
-        },
-        {
-          "text": "To create 'ironic prosody' that sonically represents the protagonist's defiant and celebratory attitude.",
-          "rationale": "The analysis highlights that the upbeat sound of the major key intentionally clashes with the dark lyrics to reflect the character's cocky mindset.",
-          "isCorrect": true
-        },
-        {
-          "text": "To make the melody easier for the vocalist to sing in a higher register.",
-          "rationale": "While the key affects vocal range, the analysis points to a deeper narrative and emotional reason for this specific choice.",
-          "isCorrect": false
-        },
-        {
-          "text": "To ground the song in the traditional harmonic language of classic, somber Westerns.",
-          "rationale": "This choice actually works against the conventions of traditional somber Westerns, which often use minor keys to convey seriousness or sadness.",
-          "isCorrect": false
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songwriting Analysis Quiz</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --accent-color: #e74c3c;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --neutral-bg: #ffffff;
+            --border-color: #bdc3c7;
         }
-      ]
-    },
-    {
-      "question": "In the 'Lyrical Arc' section, what is the ultimate 'Payoff' for the protagonist?",
-      "hint": "Think about what the final realization or outcome of the song's conflict is. Is it victory, defeat, or something else?",
-      "answerOptions": [
-        {
-          "text": "He wins the gunfight and defeats the sheriff.",
-          "rationale": "The lyrics focus on the act of leaving, not the direct outcome of a fight, as the ultimate goal.",
-          "isCorrect": false
-        },
-        {
-          "text": "His escape itself, which cements his legend as an outlaw.",
-          "rationale": "The analysis explains that the conflict's resolution is the act of becoming 'long gone,' which fulfills his mythical identity.",
-          "isCorrect": true
-        },
-        {
-          "text": "He realizes the tragic and lonely nature of his life.",
-          "rationale": "The song's tone and emotional truth are defiant and celebratory, not tragic or remorseful.",
-          "isCorrect": false
-        },
-        {
-          "text": "He finds a moment of peace and reflection in the canyon.",
-          "rationale": "The song's high tempo and aggressive energy suggest a narrative of constant motion and adrenaline, not quiet reflection.",
-          "isCorrect": false
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
-      ]
-    }
-  ]
-}
+        #quiz-container {
+            background-color: var(--neutral-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        #question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .answer-options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        .option-btn.correct {
+            background-color: #eafaf1;
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+        .option-btn.incorrect {
+            background-color: #fbecec;
+            border-color: var(--incorrect-color);
+            color: var(--incorrect-color);
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        #feedback-text {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #progress-text {
+            font-style: italic;
+        }
+        #next-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #next-btn:hover {
+            background-color: #c0392b;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <h2 id="question-text">Loading quiz...</h2>
+        <ul class="answer-options" id="answer-options">
+            <!-- Options will be generated by JS -->
+        </ul>
+        <div id="feedback-text" class="hidden"></div>
+        <div id="controls">
+            <p id="progress-text"></p>
+            <button id="next-btn" class="hidden">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const fullQuestionBank = [
+            {
+                "question": "According to the analysis, what is the primary function of choosing an F-Major key for \"Bullets and Goodbyes,\" a song with a dark, outlaw narrative?",
+                "answerOptions": [
+                    {"text": "To make the song sound more commercially appealing to a pop audience.", "rationale": "While a major key can be commercial, the analysis identifies a more specific, artistic reason for this unconventional choice related to the character.", "isCorrect": false},
+                    {"text": "To create 'ironic prosody' that sonically represents the protagonist's defiant and celebratory attitude.", "rationale": "The analysis highlights that the upbeat sound of the major key intentionally clashes with the dark lyrics to reflect the character's cocky mindset.", "isCorrect": true},
+                    {"text": "To make the melody easier for the vocalist to sing in a higher register.", "rationale": "While the key affects vocal range, the analysis points to a deeper narrative and emotional reason for this specific choice.", "isCorrect": false},
+                    {"text": "To ground the song in the traditional harmonic language of classic, somber Westerns.", "rationale": "This choice actually works against the conventions of traditional somber Westerns, which often use minor keys to convey seriousness or sadness.", "isCorrect": false}
+                ]
+            },
+            {
+                "question": "In the 'Lyrical Arc' section, what is the ultimate 'Payoff' for the protagonist?",
+                "answerOptions": [
+                    {"text": "He wins the gunfight and defeats the sheriff.", "rationale": "The lyrics focus on the act of leaving, not the direct outcome of a fight, as the ultimate goal.", "isCorrect": false},
+                    {"text": "His escape itself, which cements his legend as an outlaw.", "rationale": "The analysis explains that the conflict's resolution is the act of becoming 'long gone,' which fulfills his mythical identity.", "isCorrect": true},
+                    {"text": "He realizes the tragic and lonely nature of his life.", "rationale": "The song's tone and emotional truth are defiant and celebratory, not tragic or remorseful.", "isCorrect": false},
+                    {"text": "He finds a moment of peace and reflection in the canyon.", "rationale": "The song's high tempo and aggressive energy suggest a narrative of constant motion and adrenaline, not quiet reflection.", "isCorrect": false}
+                ]
+            },
+            {
+                "question": "Based on the 'Form Map & Energy Curve', when does the song reach its absolute peak energy level of 10?",
+                "answerOptions": [
+                    {"text": "During the first chorus.", "rationale": "The first chorus is a major energy lift (to a 9), but the analysis indicates the song builds even further from there.", "isCorrect": false},
+                    {"text": "In the Pre-Chorus, as it builds tension.", "rationale": "The pre-chorus is designed to build energy, but it serves as a ramp to an even higher point.", "isCorrect": false},
+                    {"text": "During the final chorus.", "rationale": "The analysis specifies that the final chorus is the moment of peak payoff, with maximum instrumentation and vocal intensity.", "isCorrect": true},
+                    {"text": "In the Outro, as the song fades out.", "rationale": "The outro is where the energy dissipates, fading out to reinforce the theme of an endless escape.", "isCorrect": false}
+                ]
+            },
+            {
+                "question": "What is the dominant rhythmic and structural characteristic of the song's lyrical lines, as detailed in the 'Rhythmic & Lyrical Grid'?",
+                "answerOptions": [
+                    {"text": "Varied syllable counts and complex internal rhymes.", "rationale": "The analysis points to a very consistent and simple structure, not a varied or complex one.", "isCorrect": false},
+                    {"text": "A consistent 8-syllable count with perfect AABB rhymes.", "rationale": "This structure is highlighted as key to the song's relentless, driving, and percussive feel.", "isCorrect": true},
+                    {"text": "Long, conversational lines with mostly slant rhymes.", "rationale": "The lines are described as tight and punchy, and the rhymes are almost exclusively perfect, creating stability.", "isCorrect": false},
+                    {"text": "A 9-syllable count that creates a syncopated, off-beat feel.", "rationale": "While one line has 9 syllables, the overwhelming pattern is 8 syllables, creating a straight, on-the-beat groove.", "isCorrect": false}
+                ]
+            },
+            {
+                "question": "What is the song's core 'Emotional Truth,' the single feeling it aims to prove over and over?",
+                "answerOptions": [
+                    {"text": "Lonely Regret", "rationale": "The song's tone is confident and celebratory, lacking any sense of regret for the protagonist's actions.", "isCorrect": false},
+                    {"text": "Righteous Anger", "rationale": "While rebellious, the emotion is more about joyful defiance than pure anger.", "isCorrect": false},
+                    {"text": "Fearful Panic", "rationale": "The major key and confident vocal delivery directly contradict a feeling of fear or panic.", "isCorrect": false},
+                    {"text": "Defiant Fugitivity", "rationale": "This term perfectly captures the celebratory, adrenaline-fueled feeling of being a proud outlaw on the run.", "isCorrect": true}
+                ]
+            },
+            {
+                "question": "What is the tempo of 'Bullets and Goodbyes' and what theme does it sonically support?",
+                "answerOptions": [
+                    { "text": "90 BPM, supporting a theme of somber reflection.", "rationale": "A slower tempo like 90 BPM would create a feeling of sadness, which is contrary to the song's energy.", "isCorrect": false },
+                    { "text": "141 BPM, supporting themes of escape, pursuit, and adrenaline.", "rationale": "This fast, driving tempo is a perfect match for the song's high-energy narrative of a chase.", "isCorrect": true },
+                    { "text": "120 BPM, supporting a standard rock groove.", "rationale": "While 120 BPM is a common tempo, the analysis identifies a faster, more urgent pulse for this specific song.", "isCorrect": false },
+                    { "text": "180 BPM, supporting a theme of frantic chaos.", "rationale": "180 BPM would feel chaotic and out of control, whereas the song's feel is confident and purposeful.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "What is the primary narrative function of the Pre-Chorus?",
+                "answerOptions": [
+                    { "text": "To introduce a new character who helps the protagonist.", "rationale": "The pre-chorus focuses entirely on deepening the protagonist's own character, not introducing others.", "isCorrect": false },
+                    { "text": "To show a moment of vulnerability and regret.", "rationale": "The pre-chorus builds the protagonist's legend and confidence, showing no regret.", "isCorrect": false },
+                    { "text": "To elevate the protagonist from a criminal to a mythical figure.", "rationale": "Lines like 'ain't the kind that they dig in a grave' build his larger-than-life, legendary status.", "isCorrect": true },
+                    { "text": "To describe the desert setting in more detail.", "rationale": "The pre-chorus shifts focus from the external setting to the internal mindset of the protagonist.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The analysis highlights the use of 'front-loaded' lines. What does this lyrical technique mean?",
+                "answerOptions": [
+                    { "text": "The most emotional word is saved for the very end of the line.", "rationale": "This describes a 'back-loaded' line, used for a different effect like a punchline or surprise.", "isCorrect": false },
+                    { "text": "The key image or action is delivered in the first half of the line.", "rationale": "This creates a declarative and confident tone, as seen in lines like 'Dust is rising' and 'Whiskey burns'.", "isCorrect": true },
+                    { "text": "The rhyme appears at the beginning of the line instead of the end.", "rationale": "This is a different technique known as front rhyme, which is not what 'front-loaded' refers to here.", "isCorrect": false },
+                    { "text": "The line begins before the first beat of the measure.", "rationale": "This describes a rhythmic pickup or anacrusis, a musical concept, not a lyrical one.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "Why are open 'O' vowel sounds ('long gone', 'song', 'on') particularly effective in the chorus?",
+                "answerOptions": [
+                    { "text": "They create a more aggressive and percussive sound.", "rationale": "Open vowels are sustained and melodic; hard consonants create percussive sounds, which are more common in the verses.", "isCorrect": false },
+                    { "text": "They are easier to sing and sustain, making the hook feel anthemic.", "rationale": "The analysis points out that these 'singable' vowels allow for a big, open-throated, sing-along performance.", "isCorrect": true },
+                    { "text": "They sound more conversational and natural than other vowels.", "rationale": "Closed, clipped vowels and elision ('gonna', 'wanna') are typically used to create a conversational feel.", "isCorrect": false },
+                    { "text": "They are a common feature in traditional folk ballads.", "rationale": "While they might appear in folk, their specific function here is to create a powerful, anthemic rock chorus.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The song's core harmonic vocabulary is built on what classic rock and roll progression?",
+                "answerOptions": [
+                    { "text": "A 12-bar blues progression.", "rationale": "While related to rock, the song's structure doesn't follow the specific chord changes of a 12-bar blues.", "isCorrect": false },
+                    { "text": "A standard I-vi-IV-V 'pop' progression.", "rationale": "The analysis identifies a simpler, more direct I-IV-V progression as the core, emphasizing raw power over pop complexity.", "isCorrect": false },
+                    { "text": "A dark, minor-key progression (i-iv-v).", "rationale": "The song's surprising use of a major key is its defining feature, directly contradicting a minor-key foundation.", "isCorrect": false },
+                    { "text": "The I-IV-V progression (F Major, B♭ Major, C Major).", "rationale": "This is identified as the 'bedrock of rock and roll,' providing a stable and celebratory harmonic foundation.", "isCorrect": true }
+                ]
+            },
+            {
+                "question": "How is dynamic contrast primarily created between the verse and chorus?",
+                "answerOptions": [
+                    { "text": "The tempo increases dramatically in the chorus.", "rationale": "The song maintains a consistent, driving tempo throughout to create a feeling of relentless pursuit.", "isCorrect": false },
+                    { "text": "The song changes from a major key in the verse to a minor key in the chorus.", "rationale": "The key remains consistently major to support the 'ironic prosody' and defiant tone.", "isCorrect": false },
+                    { "text": "The verse is sparse, and the chorus explodes with full instrumentation.", "rationale": "This technique of adding and removing instrumental layers is a classic way to build dynamics and make the chorus feel huge.", "isCorrect": true },
+                    { "text": "The singer whispers the verse and shouts the chorus.", "rationale": "While the chorus is sung powerfully, the verse is described as a confident 'smirk,' not a whisper.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The song's world is built from a 'lexicon of Outlaw imagery.' Which of these images is NOT mentioned in the song's lyrics?",
+                "answerOptions": [
+                    { "text": "A tin star", "rationale": "The lyric 'Tin star shining, it's burning bright' is a key image in the second verse.", "isCorrect": false },
+                    { "text": "A dusty church", "rationale": "The song's imagery is focused on the desert, saloons, and the open road, with no mention of religious buildings.", "isCorrect": true },
+                    { "text": "A sheriff", "rationale": "The 'Sheriff's shadow' is one of the first images used to establish the conflict in the song.", "isCorrect": false },
+                    { "text": "Crows", "rationale": "The lyric 'The crows are calling my name tonight' is crucial for building the protagonist's mythical status.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The 'X-Factor' of the song is its ironic prosody. What is the core conflict that creates this irony?",
+                "answerOptions": [
+                    { "text": "A celebratory, major-key sound paired with a dark, life-or-death narrative.", "rationale": "This is the central genius of the song: the happy-sounding music makes the dangerous lyrics feel triumphant.", "isCorrect": true },
+                    { "text": "Joyful lyrics sung over a sad, minor-key chord progression.", "rationale": "This is the reverse of what the song does; it uses happy music for dark lyrics.", "isCorrect": false },
+                    { "text": "A very fast tempo combined with a very slow, ballad-like melody.", "rationale": "The melody is described as being anthemic and matching the tempo, not conflicting with it.", "isCorrect": false },
+                    { "text": "Simple, conversational words sung with complex, jazzy chords.", "rationale": "The song uses simple, powerful rock chords that match the directness of the lyrics.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "What production technique is recommended to give the verse vocal a 'punchy, aggressive, and intimate' feel?",
+                "answerOptions": [
+                    { "text": "Heavy compression with minimal reverb.", "rationale": "Compression evens out the vocal for a punchy sound, while minimal reverb keeps it feeling close and intimate.", "isCorrect": true },
+                    { "text": "Significant reverb and delay.", "rationale": "These effects create a sense of space and are recommended for the chorus, not the intimate verse.", "isCorrect": false },
+                    { "text": "Panning the vocal hard to one side of the stereo field.", "rationale": "Lead vocals are almost always centered in the mix for maximum impact and balance.", "isCorrect": false },
+                    { "text": "Using heavy autotune for a polished sound.", "rationale": "The recommended aesthetic is gritty and raw, making heavy autotune an inappropriate choice.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The song's DNA is traced to artists like Johnny Cash and Steve Earle, placing it in what specific musical lineage?",
+                "answerOptions": [
+                    { "text": "The Protest Song", "rationale": "While rebellious, the song is about personal freedom, not a specific political protest.", "isCorrect": false },
+                    { "text": "The Folk Ballad", "rationale": "The song's high energy and rock instrumentation place it outside the typical folk ballad tradition.", "isCorrect": false },
+                    { "text": "The Outlaw Anthem", "rationale": "This lineage is defined by themes of anti-establishment rebellion and the myth of the American rebel, which perfectly fits the song.", "isCorrect": true },
+                    { "text": "The Pop Country Hit", "rationale": "The song's gritty aesthetic and lack of pop polish place it firmly in the 'Outlaw' subgenre, not mainstream pop country.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "What is the recommended visual aesthetic for a music video for this song?",
+                "answerOptions": [
+                    { "text": "A somber, black-and-white performance video.", "rationale": "The song's energy is high and celebratory, making a somber tone inappropriate.", "isCorrect": false },
+                    { "text": "A futuristic, sci-fi setting with neon lights.", "rationale": "The song's lyrical imagery is deeply rooted in the classic American West, not a futuristic world.", "isCorrect": false },
+                    { "text": "A classic red, white, and blue, patriotic theme.", "rationale": "The song's anti-authority stance conflicts with a traditional patriotic theme; it reclaims the landscape on its own terms.", "isCorrect": false },
+                    { "text": "A 'neo-Western' car chase with a gritty, desert color palette.", "rationale": "This concept perfectly matches the song's energy, lyrical content, and rebellious, free-spirited theme.", "isCorrect": true }
+                ]
+            },
+            {
+                "question": "What is the rhythmic signature of the primary hook, 'I'll be long gone'?",
+                "answerOptions": [
+                    { "text": "A fast, syncopated rhythm with many notes.", "rationale": "The hook is described as simple and powerful, not rhythmically complex or syncopated.", "isCorrect": false },
+                    { "text": "Two stressed, even notes (LONG GONE).", "rationale": "This simple, powerful rhythm makes the hook easy to remember and shout along to, which is perfect for an anthem.", "isCorrect": true },
+                    { "text": "A long, drawn-out phrase that stretches over multiple beats.", "rationale": "The hook is punchy and direct, not long and drawn-out.", "isCorrect": false },
+                    { "text": "A whispered, off-beat line for dramatic effect.", "rationale": "The hook is the peak of the song's energy and is meant to be sung powerfully, not whispered.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "Why does the song intentionally omit a bridge?",
+                "answerOptions": [
+                    { "text": "To make the song shorter for radio airplay.", "rationale": "While it does make the song shorter, the primary reason given in the analysis is artistic, not commercial.", "isCorrect": false },
+                    { "text": "To maintain a relentless, forward-driving structure without a change in perspective.", "rationale": "A bridge typically offers a new perspective. Omitting it keeps the song focused and maintains its relentless energy.", "isCorrect": true },
+                    { "text": "Because the chorus is repeated too many times to fit one in.", "rationale": "The number of chorus repeats is a result of the structure, not the cause of the missing bridge.", "isCorrect": false },
+                    { "text": "To save the most complex chords for the final chorus.", "rationale": "The song's harmony is described as simple and powerful throughout, not saving complexity for the end.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "The analysis suggests the vocal delivery should embody a 'confident smirk.' Which vocal approach best achieves this?",
+                "answerOptions": [
+                    { "text": "A clean, head-voice dominant performance.", "rationale": "A head-voice is typically used for intimacy or vulnerability, which is the opposite of the required attitude.", "isCorrect": false },
+                    { "text": "A chest-voice dominant performance with grit and attitude.", "rationale": "This approach provides the power, confidence, and raw texture needed to convey the character's rebellious nature.", "isCorrect": true },
+                    { "text": "A soft, whispered delivery to create tension.", "rationale": "The song's energy is high and celebratory; a whisper would conflict with the anthemic feel.", "isCorrect": false },
+                    { "text": "A highly polished and clean pop vocal.", "rationale": "The aesthetic is described as gritty and raw, not polished, to match the outlaw theme.", "isCorrect": false }
+                ]
+            },
+            {
+                "question": "How does \"Bullets and Goodbyes\" interact with the conventions of the Outlaw Country genre?",
+                "answerOptions": [
+                    { "text": "It subverts genre conventions by introducing pop melodies.", "rationale": "The analysis states the song is a celebration of the genre, not a subversion of it.", "isCorrect": false },
+                    { "text": "It modernizes the genre by using electronic instruments.", "rationale": "The inferred instrumentation is traditional rock and country (guitars, bass, drums), not electronic.", "isCorrect": false },
+                    { "text": "It fully embraces and celebrates the genre's tropes with 100% commitment.", "rationale": "The song uses every classic outlaw image and theme to deliver exactly what the genre's audience expects and loves.", "isCorrect": true },
+                    { "text": "It deconstructs the outlaw myth by showing the protagonist's vulnerability.", "rationale": "The song does the opposite; it builds up and glorifies the outlaw myth, showing only defiance and confidence.", "isCorrect": false }
+                ]
+            }
+        ];
+
+        const questionTextEl = document.getElementById('question-text');
+        const answerOptionsEl = document.getElementById('answer-options');
+        const feedbackTextEl = document.getElementById('feedback-text');
+        const progressTextEl = document.getElementById('progress-text');
+        const nextBtn = document.getElementById('next-btn');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizQuestions = [];
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            nextBtn.textContent = 'Next';
+            // Shuffle the full bank and take the first 10 questions for this session
+            quizQuestions = [...fullQuestionBank].sort(() => Math.random() - 0.5).slice(0, 10);
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            const question = quizQuestions[currentQuestionIndex];
+            questionTextEl.textContent = question.question;
+            progressTextEl.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+
+            const shuffledOptions = [...question.answerOptions].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.text;
+                button.classList.add('option-btn');
+                button.dataset.correct = option.isCorrect;
+                button.dataset.rationale = option.rationale;
+                button.addEventListener('click', selectAnswer);
+                const listItem = document.createElement('li');
+                listItem.appendChild(button);
+                answerOptionsEl.appendChild(listItem);
+            });
+        }
+        
+        function resetState() {
+            nextBtn.classList.add('hidden');
+            feedbackTextEl.classList.add('hidden');
+            while (answerOptionsEl.firstChild) {
+                answerOptionsEl.removeChild(answerOptionsEl.firstChild);
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedBtn = e.target;
+            const isCorrect = selectedBtn.dataset.correct === 'true';
+            
+            if (isCorrect) {
+                score++;
+            }
+
+            feedbackTextEl.textContent = selectedBtn.dataset.rationale;
+            feedbackTextEl.classList.remove('hidden');
+
+            Array.from(answerOptionsEl.children).forEach(li => {
+                const button = li.firstChild;
+                if (button.dataset.correct === 'true') {
+                    button.classList.add('correct');
+                } else {
+                     button.classList.add('incorrect');
+                }
+                button.disabled = true;
+            });
+            
+            if (quizQuestions.length > currentQuestionIndex + 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.textContent = 'Show Score';
+                nextBtn.classList.remove('hidden');
+            }
+        }
+        
+        function showScore() {
+            resetState();
+            questionTextEl.innerHTML = `You scored ${score} out of ${quizQuestions.length}!`;
+            nextBtn.textContent = 'Restart Quiz';
+            nextBtn.classList.remove('hidden');
+            progressTextEl.textContent = 'Well done!';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (quizQuestions.length > currentQuestionIndex + 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else if (nextBtn.textContent === 'Show Score') {
+                showScore();
+            } else {
+                startQuiz();
+            }
+        });
+
+        startQuiz();
+    </script>
+</body>
+</html>
+
