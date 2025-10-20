@@ -45,6 +45,9 @@
         .btn-back:hover {
             background-color: #FBC02D;
         }
+        .energy-chart-wrapper {
+            clip-path: inset(0 100% 0 0);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -71,7 +74,7 @@
             </div>
             <div class="kpi-card bg-gray-800 p-6 rounded-lg shadow-xl">
                 <p class="kpi-label text-sm uppercase text-gray-400">Genre</p>
-                <p class="kpi-value text-xl md:text-2xl font-bold text-white">Outlaw Rock Country</p>
+                <p class="kpi-value text-xl md:text-2xl font-bold text-white">Funk Rock</p>
             </div>
         </section>
 
@@ -102,8 +105,10 @@
         <section id="energy" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl mb-16">
             <h3 class="energy-title text-2xl font-bold text-amber mb-4 text-center">Song Structure & Energy Curve</h3>
             <p class="energy-p text-center max-w-3xl mx-auto mb-8 text-gray-300">The song's power comes from its masterful control of dynamics. It builds from a sparse, tense verse to an explosive, full-band chorus, creating a powerful release of energy that hooks the listener.</p>
-            <div class="chart-container h-64 md:h-96">
-                <canvas id="energyCurveChart"></canvas>
+            <div class="energy-chart-wrapper">
+                <div class="chart-container h-64 md:h-96">
+                    <canvas id="energyCurveChart"></canvas>
+                </div>
             </div>
         </section>
         
@@ -111,7 +116,7 @@
             <section id="lyrical-mechanics" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl">
                 <h3 class="lyrical-title text-2xl font-bold text-amber mb-4 text-center">Lyrical Mechanics</h3>
                 <p class="lyrical-p text-center max-w-3xl mx-auto mb-8 text-gray-300">The song's lyrical structure is a masterclass in efficiency and impact, using consistent meter and perfect rhymes to create a relentless, driving feel.</p>
-                 <div class="chart-container h-64 md:h-80">
+                 <div class="chart-container h-64 md:h-80 rhyme-chart-container">
                     <canvas id="rhymeTypeChart"></canvas>
                 </div>
             </section>
@@ -201,34 +206,41 @@
                 }
             };
 
+            // Energy Curve Chart
             const energyCurveEl = document.getElementById('energyCurveChart');
-            const rhymeTypeEl = document.getElementById('rhymeTypeChart');
-            const audienceEl = document.getElementById('audienceChart');
-
             const energyCurveChart = new Chart(energyCurveEl.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: ['Intro', 'Verse 1', 'Pre-Chorus', 'Chorus 1', 'Verse 2', 'Chorus 2', 'Chorus 3', 'Outro'],
                     datasets: [{
                         label: 'Energy Level (1-10)',
-                        data: [], // Start with empty data
+                        data: [3, 4, 6, 9, 5, 9, 10, 5],
                         borderColor: '#F9A826',
                         backgroundColor: 'rgba(249, 168, 38, 0.2)',
                         fill: true, tension: 0.4, pointBackgroundColor: '#F9A826', pointRadius: 5
                     }]
                 },
-                options: { ...defaultChartOptions, scales: { y: { ...defaultChartOptions.scales.y, min: 0, max: 10.5 }, x: defaultChartOptions.scales.x } }
+                options: { ...defaultChartOptions, scales: { y: { ...defaultChartOptions.scales.y, min: 0, max: 10.5, ticks: { color: '#E0E0E0', callback: value => (value === 10.5 ? null : value) }}, x: defaultChartOptions.scales.x } }
             });
 
+            // Rhyme Type Chart
+            const rhymeTypeEl = document.getElementById('rhymeTypeChart');
             const rhymeTypeChart = new Chart(rhymeTypeEl.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Perfect Rhyme', 'Other'],
-                    datasets: [{ data: [0, 100], backgroundColor: ['#00BFA5', '#4A5568'], borderColor: '#212121', borderWidth: 4 }]
+                    datasets: [{ 
+                        data: [100, 0], // Set final data immediately
+                        backgroundColor: ['#00BFA5', 'rgba(74, 85, 104, 0.5)'], 
+                        borderColor: '#212121', 
+                        borderWidth: 4
+                    }]
                 },
                 options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Rhyme Scheme Consistency', color: '#FFFFFF', font: { size: 16 } }, legend: { position: 'bottom' } } }
             });
 
+            // Audience Chart
+            const audienceEl = document.getElementById('audienceChart');
             const audienceChart = new Chart(audienceEl.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -239,99 +251,93 @@
             });
 
             function animate() {
-                gsap.set(".kpi-label, .kpi-value, .narrative-title, .narrative-p, .narrative-step, .narrative-arrow, .energy-title, .energy-p, .lyrical-title, .lyrical-p, .xfactor-title, .xfactor-box, .xfactor-fmajor, .xfactor-p, .market-title, .market-p, .audience-title, .sync-title, .sync-item", {autoAlpha: 0});
-                gsap.set(".header-font span, .subheader-font span", { autoAlpha: 0, y: -30, rotateX: 90 });
+                const DURATION = 1.8;
+                const EASE = 'power3.out';
+
+                gsap.set(".kpi-label, .kpi-value, .narrative-title, .narrative-p, .narrative-step, .narrative-arrow, .energy-title, .energy-p, .lyrical-title, .lyrical-p, .rhyme-chart-container, .xfactor-title, .xfactor-box, .xfactor-fmajor, .xfactor-p, .market-title, .market-p, .audience-title, .sync-title, .sync-item", {autoAlpha: 0});
+                gsap.set(".header-font span, .subheader-font span", { autoAlpha: 0, y: -50, rotateX: 90 });
                 gsap.set(".narrative-step", {y: 50});
 
                 const tl = gsap.timeline();
-                tl.to(".header-font span", { autoAlpha: 1, y: 0, rotateX: 0, stagger: 0.08, duration: 1, ease: 'power3.out' })
-                  .to(".subheader-font span", { autoAlpha: 1, y: 0, rotateX: 0, stagger: 0.08, duration: 1, ease: 'power3.out' }, "-=0.7");
+                tl.to(".header-font span", { autoAlpha: 1, y: 0, rotateX: 0, stagger: 0.1, duration: DURATION, ease: EASE })
+                  .to(".subheader-font span", { autoAlpha: 1, y: 0, rotateX: 0, stagger: 0.1, duration: DURATION, ease: EASE }, "-=1.5");
 
                 ScrollTrigger.create({
                     trigger: '#kpis',
-                    start: 'top 75%',
+                    start: 'top 80%',
                     once: true,
                     onEnter: () => {
-                        const kpi_tl = gsap.timeline({defaults: { duration: 0.8, ease: 'power2.out'}});
-                        kpi_tl.to('.kpi-label', { autoAlpha: 1, stagger: 0.2 })
-                              .to('.kpi-value', { autoAlpha: 1, stagger: 0.2 }, "-=0.6");
+                        const kpi_tl = gsap.timeline({defaults: { duration: DURATION, ease: EASE }});
+                        kpi_tl.to('.kpi-label', { autoAlpha: 1, stagger: 0.4 })
+                              .to('.kpi-value', { autoAlpha: 1, stagger: 0.4 }, "-=1.5");
                     }
                 });
                 
                 ScrollTrigger.create({
                     trigger: '#narrative-arc',
-                    start: 'top 75%',
+                    start: 'top 80%',
                     once: true,
                     onEnter: () => {
                         const narrative_tl = gsap.timeline();
-                        narrative_tl.to('.narrative-title', {autoAlpha: 1, duration: 0.8, ease: 'power2.out'})
-                                   .to('.narrative-p', {autoAlpha: 1, duration: 0.8, ease: 'power2.out'}, "-=0.5")
-                                   .to('.narrative-step, .narrative-arrow', {autoAlpha: 1, y: 0, stagger: 0.3, duration: 0.8, ease: 'power3.out'});
+                        narrative_tl.to('.narrative-title', {autoAlpha: 1, duration: DURATION, ease: EASE})
+                                   .to('.narrative-p', {autoAlpha: 1, duration: DURATION, ease: EASE}, "-=1.2")
+                                   .to('.narrative-step, .narrative-arrow', {autoAlpha: 1, y: 0, stagger: 0.6, duration: DURATION, ease: EASE});
                     }
                 });
 
                 ScrollTrigger.create({
                     trigger: '#energy',
-                    start: 'top 75%',
+                    start: 'top 80%',
                     once: true,
                     onEnter: () => {
-                        gsap.to('.energy-title, .energy-p', {autoAlpha: 1, stagger: 0.3, duration: 0.8, ease: 'power2.out'});
-                        const finalData = [3, 4, 6, 9, 5, 9, 10, 5];
-                        const proxy = { frame: 0 };
-                        gsap.to(proxy, {
-                            frame: finalData.length,
-                            duration: 3,
-                            ease: 'power2.inOut',
-                            onUpdate: () => {
-                                const pointsToShow = Math.ceil(proxy.frame);
-                                energyCurveChart.data.datasets[0].data = finalData.slice(0, pointsToShow);
-                                energyCurveChart.update('none');
-                            }
+                        gsap.to('.energy-title, .energy-p', {autoAlpha: 1, stagger: 0.6, duration: DURATION, ease: EASE});
+                        gsap.to('.energy-chart-wrapper', {
+                            clipPath: 'inset(0 0% 0 0)',
+                            duration: 3.5,
+                            ease: 'power3.inOut'
                         });
                     }
                 });
 
                 ScrollTrigger.create({
                     trigger: '#lyrical-mechanics',
-                    start: 'top 75%',
+                    start: 'top 80%',
                     once: true,
                     onEnter: () => {
                         const two_col_tl = gsap.timeline();
-                        two_col_tl.to('.lyrical-title, .lyrical-p', { autoAlpha: 1, stagger: 0.3, duration: 0.8, ease: 'power2.out' })
-                                  .to(rhymeTypeChart.data.datasets[0], {
-                                      ...{data: [100,0]},
-                                      duration: 2, 
-                                      ease: 'power3.out',
-                                      onUpdate: () => rhymeTypeChart.update('none')
-                                  }, "-=0.5")
-                                  .to('.xfactor-title', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, 0.5) 
-                                  .to('.xfactor-box', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, "-=0.5")
-                                  .to('.xfactor-fmajor', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, "-=0.2")
-                                  .to('.xfactor-p', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, "-=0.5");
+                        two_col_tl.to('.lyrical-title, .lyrical-p', { autoAlpha: 1, stagger: 0.6, duration: DURATION, ease: EASE })
+                                  .to('.rhyme-chart-container', { autoAlpha: 1, duration: 2.0, ease: 'power3.out' }, "-=1.0")
+                                  .to('.xfactor-title', { autoAlpha: 1, duration: DURATION, ease: EASE }, 1.0) 
+                                  .to('.xfactor-box', { autoAlpha: 1, duration: DURATION, ease: EASE }, "-=1.2")
+                                  .to('.xfactor-fmajor', { autoAlpha: 1, duration: DURATION, ease: EASE }, "-=0.7")
+                                  .to('.xfactor-p', { autoAlpha: 1, duration: DURATION, ease: EASE }, "-=1.0");
                     }
                 });
 
                 ScrollTrigger.create({
                     trigger: '#market-positioning',
-                    start: 'top 75%',
+                    start: 'top 80%',
                     once: true,
                     onEnter: () => {
+                        const finalData = [10, 35, 30, 20, 5];
+                        const dataProxy = {val: 0};
+                        
                         const market_tl = gsap.timeline();
-                        market_tl.to('.market-title, .market-p', { autoAlpha: 1, stagger: 0.3, duration: 0.8, ease: 'power2.out' })
-                                 .to('.audience-title', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, "-=0.5")
+                        market_tl.to('.market-title, .market-p', { autoAlpha: 1, stagger: 0.6, duration: DURATION, ease: EASE })
+                                 .to('.audience-title', { autoAlpha: 1, duration: DURATION, ease: EASE }, "-=1.2")
                                  .call(() => {
-                                    audienceChart.data.datasets[0].data = [10, 35, 30, 20, 5];
-                                    audienceChart.update('none');
-                                    gsap.from(audienceChart.getDatasetMeta(0).data, {
-                                        x: -300,
-                                        autoAlpha: 0,
-                                        stagger: 0.2,
-                                        duration: 1.2,
-                                        ease: 'power3.out'
+                                    const tlBars = gsap.timeline();
+                                    finalData.forEach((value, index) => {
+                                        tlBars.to(audienceChart.data.datasets[0].data, {
+                                            [index]: value,
+                                            duration: 1.2,
+                                            ease: EASE,
+                                            onUpdate: () => audienceChart.update('none')
+                                        }, index * 0.25); 
                                     });
-                                 }, null, ">-0.3")
-                                 .to('.sync-title', { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, "+=0.5")
-                                 .to('.sync-item', { autoAlpha: 1, stagger: 0.3, duration: 0.6, ease: 'power2.out' });
+                                 }, null, ">-0.5")
+                                 .to('.sync-title', { autoAlpha: 1, duration: DURATION, ease: EASE }, "+=1.0")
+                                 .to('.sync-item', { autoAlpha: 1, stagger: 0.8, duration: DURATION, ease: EASE });
                     }
                 });
             }
@@ -341,3 +347,4 @@
     </script>
 </body>
 </html>
+
