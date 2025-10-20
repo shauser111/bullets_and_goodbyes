@@ -2,43 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flashcards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songwriting Toolkit Flashcards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <style>
-        body { font-family: sans-serif; margin: 20px; }
-        .card { border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 10px; cursor: pointer; }
-        .card .back { display: none; }
+        /* To prevent flash of unstyled content */
+        body { display: none; }
+        .flashcard-container {
+            perspective: 1000px;
+        }
+        .flashcard {
+            transform-style: preserve-3d;
+            transition: transform 0.7s;
+        }
+        .card-face {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div id="flashcard-app" class="w-full max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Comprehensive Songwriting Toolkit</h1>
+        <p class="text-center text-gray-600 mb-6">Click on a card to flip it over. Use the buttons to navigate.</p>
+
+        <div id="flashcard-display" class="flashcard-container mb-6">
+            <!-- GSAP will populate this -->
+        </div>
+
+        <div class="flex items-center justify-between w-full max-w-xs mx-auto">
+            <button id="prev-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                Previous
+            </button>
+            <div id="card-counter" class="text-lg font-semibold text-gray-700"></div>
+            <button id="next-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                Next
+            </button>
+        </div>
+        <div class="text-center mt-8">
+             <a href="index.html" class="text-red-500 hover:text-red-700 font-semibold transition-colors">← Back to Main Project</a>
+        </div>
+    </div>
+
     <script>
+        document.body.style.display = 'block';
+
         const flashcardData = {
           "flashcards": [
-            { "front": {"text": "Ironic Prosody"}, "back": {"text": "The technique of deliberately mismatching the musical tone with the lyrical content to create a deeper, more complex meaning."} },
-            { "front": {"text": "Lyrical Arc"}, "back": {"text": "The fundamental three-act narrative structure of a song, consisting of the Setup, the Deepening, and the Payoff."} },
-            { "front": {"text": "Energy Curve"}, "back": {"text": "The intentional mapping of a song's dynamic intensity across its sections to create a compelling and emotionally satisfying journey."} }
+            { "front": { "text": "Prosody" }, "back": { "text": "The perfect marriage of all song elements (lyrics, melody, harmony, rhythm) to serve a single, unified emotional idea." } },
+            { "front": { "text": "Ironic Prosody" }, "back": { "text": "The technique of deliberately mismatching the musical tone with the lyrical content to create a deeper, more complex meaning." } },
+            { "front": { "text": "Lyrical Arc" }, "back": { "text": "The fundamental three-act narrative structure of a song, consisting of the Setup, the Deepening, and the Payoff." } },
+            { "front": { "text": "Arc: The Setup" }, "back": { "text": "The first stage of a song's narrative, which establishes the initial situation, character, and core problem." } },
+            { "front": { "text": "Arc: The Deepening" }, "back": { "text": "The second stage of a song's narrative, where new information or events raise the stakes and add complexity." } },
+            { "front": { "text": "Arc: The Payoff" }, "back": { "text": "The final stage of a song's narrative, which delivers the ultimate realization, conclusion, or emotional outcome." } },
+            { "front": { "text": "Emotional Truth" }, "back": { "text": "The single, core feeling that a song consistently proves from beginning to end; its emotional thesis." } },
+            { "front": { "text": "Logline" }, "back": { "text": "A single sentence that summarizes a song's core narrative conflict and emotional essence." } },
+            { "front": { "text": "Point of View (POV)" }, "back": { "text": "The perspective from which a song's story is told, dictating the listener's relationship to the narrative." } },
+            { "front": { "text": "Direct Address (I/You POV)" }, "back": { "text": "The most intimate POV, where the singer speaks directly to a 'you,' making the listener feel like an eavesdropper." } },
+            { "front": { "text": "First-Person Narrative (I/We POV)" }, "back": { "text": "The singer tells their own story from their perspective, creating an internal monologue or personal recount of events." } },
+            { "front": { "text": "Third-Person Narrative (He/She POV)" }, "back": { "text": "The singer acts as an objective, cinematic storyteller, relating the events of another character's life." } },
+            { "front": { "text": "The Canon Method" }, "back": { "text": "A technique of stating a core idea (the 'canon') and then proving it with specific, concrete examples." } },
+            { "front": { "text": "Stable vs. Unstable" }, "back": { "text": "The master principle where stable choices create resolution and calm, while unstable choices create tension and forward motion." } },
+            { "front": { "text": "Stable Tones" }, "back": { "text": "The 1st, 3rd, and 5th notes of a scale, which feel resolved and certain when a melody lands on them." } },
+            { "front": { "text": "Unstable Tones" }, "back": { "text": "The 2nd, 4th, 6th, and 7th notes of a scale, which create tension and a desire to resolve to a stable tone." } },
+            { "front": { "text": "The Stage & Spotlight Principle" }, "back": { "text": "The concept that musical stress (the spotlight) must fall on the most important meaning words (actors), not weak grammatical words (stagehands)." } },
+            { "front": { "text": "Rhyme Spectrum" }, "back": { "text": "The range of rhyme types used to control the emotional stability of a lyric, from perfect (stable) to slant (unstable)." } },
+            { "front": { "text": "Perfect Rhyme" }, "back": { "text": "When the vowel and final consonant sounds are identical (e.g., heart/apart), creating a feeling of stability and resolution." } },
+            { "front": { "text": "Slant Rhyme" }, "back": { "text": "When sounds are similar but not identical (e.g., time/mine), creating a looser, more conversational, or unresolved feeling." } },
+            { "front": { "text": "Assonance" }, "back": { "text": "A type of slant rhyme where vowel sounds match but consonants differ (e.g., mine/time)." } },
+            { "front": { "text": "Consonance" }, "back": { "text": "A type of slant rhyme where consonants match but vowels differ (e.g., man/again)." } },
+            { "front": { "text": "Rhythmic Phrasing" }, "back": { "text": "How a line's placement against the beat adds 'emotional body language,' such as feeling confident (on the beat) or longing (behind the beat)." } },
+            { "front": { "text": "Front-Heavy Phrasing" }, "back": { "text": "Phrases that start directly on a strong beat, making them feel factual, confident, and declarative." } },
+            { "front": { "text": "Back-Heavy Phrasing" }, "back": { "text": "Phrases that start after the strong beat, making them feel more emotional, reactive, or breathless." } },
+            { "front": { "text": "Elision" }, "back": { "text": "The blending or dropping of syllables to create a more natural, conversational flow (e.g., 'going to' becomes 'gonna')." } },
+            { "front": { "text": "Vowel Color" }, "back": { "text": "The use of 'open' vowel sounds (ah, oh) for sustained, emotional notes versus 'closed' sounds for faster, conversational lines." } },
+            { "front": { "text": "Key & Mode" }, "back": { "text": "The foundational 'home base' of pitches for a song. Major keys often feel happy or open; minor keys feel sad or serious." } },
+            { "front": { "text": "Tempo (BPM)" }, "back": { "text": "Beats Per Minute; the speed of a song's pulse, which dictates its energy level." } },
+            { "front": { "text": "Time Signature" }, "back": { "text": "Defines how beats are grouped in a musical bar (e.g., 4/4 is four quarter-note beats per bar)." } },
+            { "front": { "text": "Verse" }, "back": { "text": "The section of a song dedicated to storytelling, providing details and advancing the narrative." } },
+            { "front": { "text": "Pre-Chorus" }, "back": { "text": "A section that builds tension and energy, lyrically and musically leading into the chorus." } },
+            { "front": { "text": "Chorus" }, "back": { "text": "The song's central message and musical hook, typically repeated with the highest energy." } },
+            { "front": { "text": "Bridge" }, "back": { "text": "A section that contrasts with the verse and chorus, offering a new perspective or a moment of truth." } },
+            { "front": { "text": "Tag/Vamp" }, "back": { "text": "A short, repeated phrase (lyrical or musical) that reinforces a key idea, often used in an outro." } },
+            { "front": { "text": "Groove" }, "back": { "text": "The feel of the rhythm section (drums and bass), such as straight and driving or laid-back and syncopated." } },
+            { "front": { "text": "Arrangement" }, "back": { "text": "The art of what instrument plays what, and when, to build dynamics and support the energy curve." } },
+            { "front": { "text": "The 'X-Factor'" }, "back": { "text": "The single, specific craft move—a line, melodic turn, or production choice—that elevates a song from great to unforgettable." } },
+            { "front": { "text": "The 'Human Factor'" }, "back": { "text": "A songwriting principle that values emotional authenticity and character consistency over technical perfection." } },
+            { "front": { "text": "Camelot Wheel" }, "back": { "text": "A visual tool for DJs and producers that maps musical keys by their harmonic compatibility." } },
+            { "front": { "text": "Dynamic Arc" }, "back": { "text": "The planned journey of a song's volume and intensity, from quiet and intimate to loud and powerful." } },
+            { "front": { "text": "Mix Priorities" }, "back": { "text": "The producer's decision of which elements should be in the foreground (e.g., vocal), midground, or background of a song's soundscape." } },
+            { "front": { "text": "Hit DNA Checklist" }, "back": { "text": "A set of criteria used to assess a song's commercial potential, such as hook placement and dynamic contrast." } },
+            { "front": { "text": "Harmonic Vocabulary" }, "back": { "text": "The set of chords used in a song, which are chosen to support its emotional and genre-specific language." } },
+            { "front": { "text": "Pedal Point (or Drone)" }, "back": { "text": "A sustained or repeated note, typically in the bass, over which other harmonies change, creating tension." } },
+            { "front": { "text": "Vocal Compression" }, "back": { "text": "A production technique that reduces the dynamic range of a vocal, making it sound punchier, more consistent, and more present in the mix." } },
+            { "front": { "text": "Stereo Field" }, "back": { "text": "The perceived space between left and right speakers, which producers use to place instruments and create a wide, immersive sound." } },
+            { "front": { "text": "Intertextual Context" }, "back": { "text": "The relationship between a song and other cultural works, such as its place in the lineage of a specific genre or movement." } },
+            { "front": { "text": "Subtext" }, "back": { "text": "The underlying, unspoken meaning or theme of a song's lyric." } },
+            { "front": { "text": "Relative Minor (vi chord)" }, "back": { "text": "The minor chord built on the sixth degree of a major scale, used to introduce a brief moment of tension or sadness." } }
           ]
         };
-        
-        const container = document.createElement('div');
-        flashcardData.flashcards.forEach(cardData => {
-            const cardEl = document.createElement('div');
-            cardEl.className = 'card';
+
+        const display = document.getElementById('flashcard-display');
+        const counter = document.getElementById('card-counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let currentIndex = 0;
+        const cards = [];
+
+        // Create all card elements
+        flashcardData.flashcards.forEach((data, index) => {
+            const card = document.createElement('div');
+            card.className = `flashcard w-full h-64 relative cursor-pointer ${index === 0 ? '' : 'hidden'}`;
+            
             const front = document.createElement('div');
-            front.className = 'front';
-            front.textContent = cardData.front.text;
+            front.className = 'card-face card-front absolute w-full h-full bg-white rounded-lg shadow-lg flex items-center justify-center p-6 text-center';
+            front.innerHTML = `<h2 class="text-2xl font-semibold text-gray-800">${data.front.text}</h2>`;
+
             const back = document.createElement('div');
-            back.className = 'back';
-            back.textContent = cardData.back.text;
-            
-            cardEl.appendChild(front);
-            cardEl.appendChild(back);
-            
-            cardEl.addEventListener('click', () => {
-                back.style.display = back.style.display === 'none' ? 'block' : 'none';
+            back.className = 'card-face card-back absolute w-full h-full bg-gray-800 rounded-lg shadow-lg flex items-center justify-center p-6 text-center';
+            back.innerHTML = `<p class="text-lg text-white">${data.back.text}</p>`;
+
+            card.appendChild(front);
+            card.appendChild(back);
+            display.appendChild(card);
+            cards.push(card);
+
+            // GSAP animation
+            card.isFlipped = false;
+            card.addEventListener('click', () => {
+                card.isFlipped = !card.isFlipped;
+                gsap.to(card, {
+                    rotationY: card.isFlipped ? 180 : 0,
+                    duration: 0.6,
+                    ease: 'power2.inOut'
+                });
             });
-            container.appendChild(cardEl);
         });
-        document.body.appendChild(container);
+
+        function updateCardView() {
+            cards.forEach((card, index) => {
+                card.classList.toggle('hidden', index !== currentIndex);
+                if (card.isFlipped) {
+                    card.isFlipped = false;
+                    gsap.set(card, { rotationY: 0 });
+                }
+            });
+            counter.textContent = `${currentIndex + 1} / ${cards.length}`;
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateCardView();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCardView();
+        });
+
+        // Initial setup
+        updateCardView();
+
     </script>
 </body>
 </html>
+
