@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomy of an Anthem: Deconstructing "Bullets and Goodbyes"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .text-amber { color: #F9A826; }
+        .bg-amber { background-color: #F9A826; }
+        .border-amber { border-color: #F9A826; }
+        .text-deep-blue { color: #0D47A1; }
+        .bg-deep-blue { background-color: #0D47A1; }
+        .text-teal { color: #00BFA5; }
+        .bg-teal { background-color: #00BFA5; }
+        .shadow-glow-amber {
+            box-shadow: 0 0 15px rgba(249, 168, 38, 0.5), 0 0 5px rgba(249, 168, 38, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-[#212121] text-gray-200">
+
+    <main class="container mx-auto p-12 md:p-18">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-wider text-amber mb-2">Anatomy of an Anthem</h1>
+            <h2 class="text-2xl md:text-4xl font-bold text-white">Deconstructing "Bullets and Goodbyes"</h2>
+        </header>
+
+        <section id="kpis" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-12 text-center">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <p class="text-sm uppercase text-gray-400">Emotional Truth</p>
+                <p class="text-xl md:text-2xl font-bold text-amber">Defiant Fugitivity</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <p class="text-sm uppercase text-gray-400">Key / Mode</p>
+                <p class="text-xl md:text-2xl font-bold text-white">F Major</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <p class="text-sm uppercase text-gray-400">Tempo</p>
+                <p class="text-xl md:text-2xl font-bold text-white">141 <span class="text-base text-gray-400">BPM</span></p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <p class="text-sm uppercase text-gray-400">Genre</p>
+                <p class="text-xl md:text-2xl font-bold text-white">Outlaw Country</p>
+            </div>
+        </section>
+
+        <section id="narrative-arc" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl mb-12">
+            <h3 class="text-2xl font-bold text-amber mb-4 text-center">The Narrative Blueprint</h3>
+            <p class="text-center max-w-3xl mx-auto mb-8 text-gray-300">The song follows a classic three-act structure, evolving its core idea from a tense confrontation to a legendary statement of identity. This arc ensures the song gains emotional weight and delivers a satisfying payoff.</p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-center">
+                <div class="w-full md:w-1/3 p-4 border-2 border-dashed border-gray-600 rounded-lg">
+                    <span class="text-3xl font-black text-amber">1</span>
+                    <h4 class="font-bold text-lg mt-2">The Setup</h4>
+                    <p class="text-sm text-gray-400 mt-1">A tense standoff is established. The protagonist's aggressive, anti-authority nature is immediately defined.</p>
+                </div>
+                <div class="text-2xl text-amber font-thin hidden md:block">→</div>
+                <div class="w-full md:w-1/3 p-4 border-2 border-dashed border-gray-600 rounded-lg">
+                    <span class="text-3xl font-black text-amber">2</span>
+                    <h4 class="font-bold text-lg mt-2">The Deepening</h4>
+                    <p class="text-sm text-gray-400 mt-1">The protagonist elevates himself from a criminal to a mythic figure who is fatalistic yet unkillable.</p>
+                </div>
+                 <div class="text-2xl text-amber font-thin hidden md:block">→</div>
+                <div class="w-full md:w-1/3 p-4 border-2 border-dashed border-gray-600 rounded-lg">
+                    <span class="text-3xl font-black text-amber">3</span>
+                    <h4 class="font-bold text-lg mt-2">The Payoff</h4>
+                    <p class="text-sm text-gray-400 mt-1">The conflict's resolution isn't death but escape, cementing his "long gone" legend as a way of life.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="energy" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl mb-12">
+            <h3 class="text-2xl font-bold text-amber mb-4 text-center">Song Structure & Energy Curve</h3>
+            <p class="text-center max-w-3xl mx-auto mb-8 text-gray-300">The song's power comes from its masterful control of dynamics. It builds from a sparse, tense verse to an explosive, full-band chorus, creating a powerful release of energy that hooks the listener.</p>
+            <div class="chart-container">
+                <canvas id="energyCurveChart"></canvas>
+            </div>
+        </section>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <section id="lyrical-mechanics" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-bold text-amber mb-4 text-center">Lyrical Mechanics</h3>
+                <p class="text-center max-w-3xl mx-auto mb-8 text-gray-300">The song's lyrical structure is a masterclass in efficiency and impact, using consistent meter and perfect rhymes to create a relentless, driving feel.</p>
+                 <div class="chart-container h-64 md:h-80">
+                    <canvas id="rhymeTypeChart"></canvas>
+                </div>
+            </section>
+
+            <section id="x-factor" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl flex flex-col justify-center items-center text-center">
+                 <h3 class="text-2xl font-bold text-amber mb-4">The X-Factor: Ironic Prosody</h3>
+                 <div class="p-6 border-4 border-amber rounded-lg shadow-glow-amber">
+                    <p class="text-5xl font-black text-white mb-2">F Major</p>
+                    <p class="text-gray-300">Choosing an upbeat, celebratory Major key for a dark, violent narrative is the song's moment of genius. The music sonically captures the protagonist's defiant smirk, framing the deadly chase not as a tragedy, but as a thrilling, triumphant game.</p>
+                 </div>
+            </section>
+        </div>
+
+        <section id="market-positioning" class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl mt-12">
+            <h3 class="text-2xl font-bold text-amber mb-4 text-center">Commercial Viability & Market Impact</h3>
+            <p class="text-center max-w-3xl mx-auto mb-8 text-gray-300">"Bullets and Goodbyes" is perfectly positioned to serve a core market of Outlaw Country and Southern Rock fans, with high potential for synchronization in film, television, and advertising.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-2 text-center">Target Audience Demographics</h4>
+                    <div class="chart-container h-80">
+                        <canvas id="audienceChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-4 text-center">High-Potential Sync Placements</h4>
+                    <ul class="space-y-3">
+                        <li class="bg-gray-700 p-4 rounded-lg flex items-center">
+                            <span class="text-2xl mr-4">🛻</span>
+                            <div>
+                                <h5 class="font-semibold">Automotive Commercials</h5>
+                                <p class="text-sm text-gray-400">Perfect for brands like Ford, Ram, or Chevrolet emphasizing power and rugged individualism.</p>
+                            </div>
+                        </li>
+                        <li class="bg-gray-700 p-4 rounded-lg flex items-center">
+                            <span class="text-2xl mr-4">🎬</span>
+                            <div>
+                                <h5 class="font-semibold">Film & TV Action Scenes</h5>
+                                <p class="text-sm text-gray-400">Ideal for high-octane chase sequences or modern Westerns.</p>
+                            </div>
+                        </li>
+                         <li class="bg-gray-700 p-4 rounded-lg flex items-center">
+                            <span class="text-2xl mr-4">🎮</span>
+                            <div>
+                                <h5 class="font-semibold">Video Games</h5>
+                                <p class="text-sm text-gray-400">Well-suited for titles like Grand Theft Auto or Red Dead Redemption.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const tooltipTitleCallback = function(tooltipItems) {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            };
+            
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#E0E0E0'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                           title: tooltipTitleCallback
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { color: '#E0E0E0' },
+                        grid: { color: 'rgba(224, 224, 224, 0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#E0E0E0' },
+                        grid: { color: 'rgba(224, 224, 224, 0.1)' }
+                    }
+                }
+            };
+            
+            const wrapLabel = (label) => {
+                if (label.length <= 16) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for(const word of words) {
+                    if ((currentLine + ' ' + word).length > 16 && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = currentLine ? currentLine + ' ' + word : word;
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+
+            const energyCurveCtx = document.getElementById('energyCurveChart').getContext('2d');
+            const energyCurveLabels = ['Intro', 'Verse 1', 'Pre-Chorus', 'Chorus 1', 'Verse 2', 'Chorus 2', 'Chorus 3', 'Outro'];
+            new Chart(energyCurveCtx, {
+                type: 'line',
+                data: {
+                    labels: energyCurveLabels.map(wrapLabel),
+                    datasets: [{
+                        label: 'Energy Level (1-10)',
+                        data: [3, 4, 6, 9, 5, 9, 10, 5],
+                        borderColor: '#F9A826',
+                        backgroundColor: 'rgba(249, 168, 38, 0.2)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#F9A826',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    ...defaultChartOptions,
+                     scales: {
+                        y: {
+                           ...defaultChartOptions.scales.y,
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        },
+                        x: defaultChartOptions.scales.x
+                    }
+                }
+            });
+
+            const rhymeTypeCtx = document.getElementById('rhymeTypeChart').getContext('2d');
+            new Chart(rhymeTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Perfect Rhyme', 'Other'],
+                    datasets: [{
+                        label: 'Rhyme Scheme',
+                        data: [100, 0],
+                        backgroundColor: ['#00BFA5', '#0D47A1'],
+                        borderColor: '#212121',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                     responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Rhyme Scheme Consistency',
+                            color: '#FFFFFF',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#E0E0E0'
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        }
+                    }
+                }
+            });
+
+            const audienceCtx = document.getElementById('audienceChart').getContext('2d');
+            new Chart(audienceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['18-24', '25-34', '35-44', '45-55', '55+'],
+                    datasets: [{
+                        label: 'Audience Share',
+                        data: [10, 35, 30, 20, 5],
+                        backgroundColor: ['#0D47A1', '#F9A826', '#00BFA5', '#4682B4', '#6495ED'],
+                        borderColor: '#212121',
+                        borderWidth: 2,
+                    }]
+                },
+                 options: {
+                    ...defaultChartOptions,
+                    indexAxis: 'y',
+                    plugins: {
+                        ...defaultChartOptions.plugins,
+                        legend: { display: false }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
