@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flashcards</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .card { border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 10px; cursor: pointer; }
+        .card .back { display: none; }
+    </style>
+</head>
+<body>
+    <script>
+        const flashcardData = {
+          "flashcards": [
+            { "front": {"text": "Ironic Prosody"}, "back": {"text": "The technique of deliberately mismatching the musical tone with the lyrical content to create a deeper, more complex meaning."} },
+            { "front": {"text": "Lyrical Arc"}, "back": {"text": "The fundamental three-act narrative structure of a song, consisting of the Setup, the Deepening, and the Payoff."} },
+            { "front": {"text": "Energy Curve"}, "back": {"text": "The intentional mapping of a song's dynamic intensity across its sections to create a compelling and emotionally satisfying journey."} }
+          ]
+        };
+        
+        const container = document.createElement('div');
+        flashcardData.flashcards.forEach(cardData => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'card';
+            const front = document.createElement('div');
+            front.className = 'front';
+            front.textContent = cardData.front.text;
+            const back = document.createElement('div');
+            back.className = 'back';
+            back.textContent = cardData.back.text;
+            
+            cardEl.appendChild(front);
+            cardEl.appendChild(back);
+            
+            cardEl.addEventListener('click', () => {
+                back.style.display = back.style.display === 'none' ? 'block' : 'none';
+            });
+            container.appendChild(cardEl);
+        });
+        document.body.appendChild(container);
+    </script>
+</body>
+</html>

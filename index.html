@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "Bullets and Goodbyes" Project</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>The "Bullets and Goodbyes" Project</h1>
+            <p class="subtitle">An Ivy League-Level Deconstruction of a Modern Outlaw Anthem</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Audio Section -->
+        <section id="audio" class="card">
+            <h2>Audio Library</h2>
+            <p>Listen to the original track and the expert deep-dive commentary on its core songwriting principles.</p>
+            <div class="audio-player">
+                <p><strong>Bullets and Goodbyes - Avalanche</strong></p>
+                <audio controls src="assets/bullets-and-goodbyes.mp3">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="audio-player">
+                <p><strong>Deep Dive: Ironic Prosody & The Outlaw Myth</strong></p>
+                <audio controls src="assets/ironic-prosody-deep-dive.mp3">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </section>
+
+        <!-- Analysis Section -->
+        <section id="analysis" class="card">
+            <h2>Core Analysis</h2>
+            <p>Explore the definitive documents that break down every facet of the song, from its market potential to its lyrical genius.</p>
+            <div class="document-links">
+                <a href="assets/Definitive_Song_Analysis.pdf" class="btn" target="_blank">View Definitive Analysis (PDF)</a>
+                <a href="Anatomy_of_an_Anthem_Infographic.html" class="btn" target="_blank">Launch Interactive Infographic</a>
+            </div>
+        </section>
+
+        <!-- Learning Hub Section -->
+        <section id="learning-hub" class="card">
+            <h2>Interactive Learning Hub</h2>
+            <p>Test your knowledge and memorize the key concepts with these interactive tools.</p>
+            <div class="learning-tabs">
+                <button class="tab-link active" onclick="openTab(event, 'quiz-content')">Quiz</button>
+                <button class="tab-link" onclick="openTab(event, 'flashcards-content')">Flashcards</button>
+            </div>
+
+            <div id="quiz-content" class="tab-content active">
+                <h3>Songwriting Analysis Quiz</h3>
+                <iframe src="quiz.html" frameborder="0" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="flashcards-content" class="tab-content">
+                <h3>Key Concepts Flashcards</h3>
+                <iframe src="flashcards.html" frameborder="0" width="100%" height="500px"></iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 The "Bullets and Goodbyes" Project. A collaboration with Song Analysis Gem.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
