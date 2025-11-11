@@ -24,17 +24,24 @@ GLOBAL STYLES
     box-sizing: border-box;
 }
 
+/* Body styles are now set in the <head> of index.html
+  to load before your custom styles. You can leave this empty
+  or remove it if you like.
+*/
 body {
     font-family: var(--font-body);
-    background-color: var(--bg-color);
-    color: var(--text-primary);
+    /* background-color: var(--bg-color); */ /* Handled by inline <style> */
+    /* color: var(--text-primary); */ /* Handled by inline <style> */
     margin: 0;
     line-height: 1.6;
 }
 
-.container {
+/* *** CLASS RENAMED ***
+  This is now .content-container to avoid conflict with Tailwind
+*/
+.content-container {
     width: 90%;
-    max-width: 960px;
+    max-width: 1000px; /* This width will now work correctly */
     margin: 0 auto;
 }
 
@@ -45,7 +52,7 @@ a {
 
 a:hover {
     color: var(--accent-hover);
-    text-decoration: underline;
+ 
 }
 
 /*
@@ -57,14 +64,14 @@ h1, h2 {
     font-family: var(--font-header);
     text-transform: uppercase;
     color: var(--accent-color);
-    margin-top: 0;
-    margin-bottom: 0.5rem;
+    margin-top: 3;
     font-weight: 700;
 }
 
 h1 {
     font-size: 2.8rem;
     letter-spacing: 1.5px;
+    margin-bottom: 2rem;
 }
 
 h2 {
@@ -72,7 +79,15 @@ h2 {
     letter-spacing: 1px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--accent-color);
+    margin-bottom: 2rem;
 }
+
+/* This rule is now in the <head> of index.html to fix text visibility */
+/*
+h2 + p {
+    margin-top: 0.5rem;
+}
+*/
 
 h3 {
     font-family: var(--font-body);
@@ -92,15 +107,18 @@ p {
 HEADER & FOOTER
 ===============
 */
+/* This is your original header, which is no longer used */
 .main-header {
+    /*
     background-color: var(--card-bg-color);
     padding: 30px 0;
     text-align: center;
     border-bottom: 4px solid var(--accent-color);
-    margin-bottom: 30px;
+    margin-bottom: 5px;
+    */
 }
 
-.main-header .container {
+.main-header .content-container { /* Renamed */
     padding: 0 20px;
 }
 
@@ -127,9 +145,9 @@ CARD LAYOUT
 */
 .card {
     background-color: var(--card-bg-color);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 25px 30px;
-    margin-bottom: 30px;
+    margin-bottom: 2.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -144,14 +162,24 @@ COMPONENTS
     background-color: #3c3c3c;
     padding: 15px 20px;
     border-radius: 5px;
-    margin-bottom: 15px;
 }
 
 .audio-player p {
-    margin: 0 0 10px 0;
+    margin: 0 0 0.75rem 0;
     font-weight: 600;
     color: #FFFFFF;
 }
+
+/* space between description and first player */
+section#audio p + .audio-player {
+    margin-top: 2rem;
+}
+
+/* space *between* the two players */
+.audio-player + .audio-player {
+    margin-top: 2rem;
+}
+
 
 audio {
     width: 100%;
@@ -162,7 +190,7 @@ audio {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 1.5rem;
 }
 
 .btn {
@@ -190,6 +218,7 @@ audio {
 .learning-tabs {
     border-bottom: 2px solid var(--text-secondary);
     margin-bottom: 20px;
+    margin-top: 1.5rem;
 }
 
 .tab-link {
